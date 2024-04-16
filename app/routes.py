@@ -2,20 +2,25 @@
 
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
-from models import Transaction, calculate_balance
+from .models import Transaction, calculate_balance
 import datetime
-from models import db
+from .models import db
 from dotenv import load_dotenv
 import os
-
 
 load_dotenv()
 
 app = Flask(__name__)
-
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://lavy:Lavenia1@localhost/pettycash'
 app.secret_key = os.getenv('SECRET_KEY')
 db.init_app(app)
+
+
+def create_tables():
+    with app.app_context():
+        db.create_all()
+
+create_tables()
 
 @app.route('/')
 def index():
@@ -46,7 +51,8 @@ def add_transaction():
 
         try:
             db.session.commit()
-            flash("Transaction Successfully Created")  # Pass a string message to the flash function
+            flash("Transaction Successfully Created")
+            return "Transaction Successfully Created"  # Pass a string message to the flash function
         except Exception as e:
             db.session.rollback()
             return "Error in Adding Transaction: " + str(e)
@@ -57,14 +63,14 @@ def add_transaction():
 def search():
     keyword = request.args.get('keyword')
     transactions = Transaction.query.filter(Transaction.description.contains(keyword)).all()
-    return render_template('index.html', transactions=transactions)
+    balance = calculate_balance()
+    return render_template('index.html', transactions=transactions, balance=balance)
 
 @app.route('/filter', methods=['GET'])
 def filter():
     category = request.args.get('category')
     start_date= request.args.get('start_date')
     end_date= request.args.get('end_date')
-    balance = calculate_balance()
 
     query = Transaction.query
     if category:
@@ -79,9 +85,5 @@ def filter():
             return "Error: Invalid date format. Please use YYYY-MM-DD."
 
     transactions = query.order_by(Transaction.date.desc()).all()
+    balance = calculate_balance()
     return render_template('index.html', transactions=transactions, balance=balance)
-
-if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-    app.run(debug=True)
