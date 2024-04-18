@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Petty Cash Management System</title>
+    <link rel="stylesheet" type="text/css" href="../static/style.css">
+</head>
+
+<body>
+    {% block content %}
+    <h1>Transactions</h1>
+    <form action="{{ url_for('search') }}" method="get">
+        <input type="text" name="keyword" placeholder="Search...">
+        <button type="submit">Search</button>
+    </form>
+    <form action="{{ url_for('filter') }}" method="get">
+        <label for="category">Category:</label>
+        <select name="category">
+            <option value=""></option>
+            <option value="office_supplies">Office Supplies</option>
+            <option value="travel_expense">Travel Expense</option>
+        </select>
+        <label for="start_date">Start Date:</label>
+        <input type="date" name="start_date">
+        <label for="end_date">End Date:</label>
+        <input type="date" name="end_date">
+        <button type="submit">Filter</button>
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Category</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaction in transactions %}
+            <tr>
+                <td>{{ transaction.date.strftime('%Y-%m-%d') }}</td>
+                <td>{{ transaction.description }}</td>
+                <td>{{ transaction.amount }}</td>
+                <td>{{ transaction.category }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ url_for('add_transaction') }}">Add Transaction</a>
+    <p>Current Balance: {{ balance }}</p>
+    {% endblock %}
+</body>
+
+</html>

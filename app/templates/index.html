@@ -1,52 +1,82 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Petty Cash Management System</title>
-    <link rel="stylesheet" type="text/css" href="../static/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction Recorder</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .hero {
+            background-color: #f0f0f0;
+            padding: 50px 0;
+            text-align: center;
+        }
+        
+        .menu {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+        
+        .menu a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 20px;
+        }
+        
+        .menu a:hover {
+            text-decoration: underline;
+        }
+        
+        .content {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .section-content {
+            line-height: 1.6;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Transactions</h1>
-    <form action="{{ url_for('search') }}" method="get">
-        <input type="text" name="keyword" placeholder="Search...">
-        <button type="submit">Search</button>
-    </form>
-    <form action="{{ url_for('filter') }}" method="get">
-        <label for="category">Category:</label>
-        <select name="category">
-        <option value=""></option>
-        <option value="office_supplies">Office Supplies</option>
-        <option value="travel_expense">Travel Expense</option>
-      </select>
-        <label for="start_date">Start Date:</label>
-        <input type="date" name="start_date">
-        <label for="end_date">End Date:</label>
-        <input type="date" name="end_date">
-        <button type="submit">Filter</button>
-    </form>
-    <table>
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Description</th>
-                <th>Amount</th>
-                <th>Category</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for transaction in transactions %}
-            <tr>
-                <td>{{ transaction.date.strftime('%Y-%m-%d') }}</td>
-                <td>{{ transaction.description }}</td>
-                <td>{{ transaction.amount }}</td>
-                <td>{{ transaction.category }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <a href="{{ url_for('add_transaction') }}">Add Transaction</a>
-    <p>Current Balance: {{ balance }}</p>
+    <div class="hero">
+        <h1 class="title">Transaction Recorder</h1>
+        <p class="subtitle">Keep track of your transactions with ease</p>
+    </div>
+
+    <div class="menu">
+        <a href="/login">Login</a>
+        <a href="/signup">Sign Up</a>
+        <a href="/about">About Us</a>
+        <a href="/contact">Contact</a>
+    </div>
+
+    <div class="content">
+        <section>
+            <h2 class="section-title">About Us</h2>
+            <p class="section-content">Welcome to our transaction recording app! We aim to provide you with a simple and efficient way to manage your financial transactions. With our user-friendly interface, you can easily record income, expenses, and other financial activities.</p>
+        </section>
+
+        <section>
+            <h2 class="section-title">Contact</h2>
+            <p class="section-content">Have questions or feedback? We'd love to hear from you! Please feel free to reach out to our support team at support@transactionrecorder.com. We're here to assist you with any inquiries or concerns you may have.</p>
+        </section>
+    </div>
 </body>
 
 </html>
